@@ -7,12 +7,12 @@ import (
 
 var DB *gorm.DB
 
-
 func InitDB() (*gorm.DB, error) {
-	DB, err := gorm.Open("mysql", "root:zhy123@/file-server?charset=utf8&parseTime=True")
+	db, err := gorm.Open("mysql","root:@/reviewachievements?charset=utf8&parseTime=True")
 	if err != nil {
 		return nil, err
 	}
-	DB.AutoMigrate(&User{})
+	DB = db
+	db.AutoMigrate(&User{})
 	return DB, nil
 }
