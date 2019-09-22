@@ -1,8 +1,12 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+	"io"
 	"log"
+	"os"
 	"reviewAchievements/model"
+	"reviewAchievements/route"
 )
 
 func main() {
@@ -12,5 +16,11 @@ func main() {
 		return
 	}
 	defer db.Close()
-	model.Query(7)
+
+	r := gin.New()
+	f, _ := os.Create("gin.log")
+	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+	route.LOAD(r)
+	r.Run()
+
 }

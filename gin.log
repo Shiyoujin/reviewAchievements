@@ -1,0 +1,6 @@
+[GIN-debug] POST   /userRank                 --> reviewAchievements/controller.GetUserRank (1 handlers)
+[GIN-debug] POST   /allRank                  --> reviewAchievements/controller.GetAllRank (1 handlers)
+[GIN-debug] POST   /addTotal                 --> reviewAchievements/controller.AddGrades (1 handlers)
+[GIN-debug] POST   /pass                     --> reviewAchievements/controller.UpdateLevelTime (1 handlers)
+[GIN-debug] Environment variable PORT is undefined. Using port :8080 by default
+[GIN-debug] Listening and serving HTTP on :8080

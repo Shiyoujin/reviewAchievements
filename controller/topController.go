@@ -11,15 +11,16 @@ import (
 )
 
 func GetAllRank(c *gin.Context) {
-	bankInfos := model.GetAllRank()
-	bankInfos_Json, err := json.Marshal(bankInfos)
+	rankInfos := model.GetAllRank()
+	rankInfos_Json, err := json.Marshal(rankInfos)
 	if err != nil {
 		fmt.Println("Marshal json error: ", err)
 	}
-	c.Data(http.StatusOK, "application/json", bankInfos_Json)
+	//c.Data(http.StatusOK, "application/json", bankInfos_Json)
+	c.JSON(http.StatusOK,rankInfos_Json)
 }
 
-func InsertController(c *gin.Context) {
+func AddGrades(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	redId, _, _ := utils.GetTokenValue(token)
 	totalTimeStr := c.Request.FormValue("total")
@@ -41,10 +42,10 @@ func GetUserRank(c *gin.Context) {
 	})
 }
 
-//定时将mysql数据写入redis
-func CopyInfo(c *gin.Context)  {
-	model.CopyInfoFromDB()
-	c.JSON(http.StatusOK, gin.H{
-		"message": "success",
-	})
-}
+////定时将mysql数据写入redis
+//func CopyInfo(c *gin.Context)  {
+//	model.CopyInfoFromDB()
+//	c.JSON(http.StatusOK, gin.H{
+//		"message": "success",
+//	})
+//}
