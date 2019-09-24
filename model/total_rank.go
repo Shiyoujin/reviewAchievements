@@ -6,14 +6,14 @@ type UserInfo struct {
 
 	RedId string   `gorm:"column:redId"`
 	NickName string  `gorm:"column:nickName"`
-	Total int
+	Total float64
 }
 
 // 获取前100名
 func GetAllRank() ([]*UserInfo){
 	var userInfos []*UserInfo
 
-	rows, err :=DB.Raw("select redId, nickName, total from users order by total limit 100").Rows()
+	rows, err :=DB.Raw("select redId, nickName, total from users where total > 0 order by total limit 100").Rows()
 	if err != nil {
 		log.Println(err)
 	}

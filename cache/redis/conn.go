@@ -38,7 +38,7 @@ func newRedisPool() *redis.Pool {
 }
 
 
-func init() {
+func initRedis() {
 	pool = newRedisPool()
 }
 

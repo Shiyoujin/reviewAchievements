@@ -6,67 +6,36 @@ import (
 
 type UserRank struct {
 	RedId string `gorm:"column:redId"`
-	Total int
+	Total float64
 	Rank  int
 }
 
+//type Total struct {
+//	Totals int64
+//}
+
 // 获取用户闯关后排名
-func InsertTotal(total int, redId string) (int, int) {
-	var count int = -1
-	var recordTotal UserRank
-	err := DB.Table("users").Select("total").Where("redId = ? ", redId).First(&recordTotal).Error
+func InsertTotal(redId string) (float64, int) {
+	var recordTotal float64
+	var userInfo UserRank
+	err := DB.Raw("SELECT (one*1.333+two*1.265+three*1.125+four*0.999+five*0.75) as totals FROM users u where u.redId = ?",redId).Row().Scan(&recordTotal)
 	if err != nil {
-		log.Println("fail to get total time", err)
+		log.Println("fail to insert total",err)
 	}
+	DB.Table("users").Where("redId = ?",redId).Update("total",recordTotal)
 
-	if total > 0 {
-		if total < recordTotal.Total || recordTotal.Total == -1 {
-			err = DB.Table("users").Where("redId= ?", redId).Update("total", total).Error
-			if err != nil {
-				log.Println("insert record error:", err)
-				return -1, -1
-			}
-		}
-	}
-
-	err = DB.Raw("select count(*) from users u where u.total < ?", total).Row().Scan(&count)
-	if err != nil {
-		log.Println("fail to get user rank",err)
-	}
-
-	return total, count + 1
-}
-
-// 获取用户最佳排行
-func GetUserRank(redId string) (int, int) {
-	var userRank UserRank
-	var userRanks []UserRank
-	rows, err := DB.Raw("SELECT * FROM ( SELECT redId, total, @curRank := @curRank + 1 AS rank FROM users u, (SELECT @curRank := 0) r ORDER BY total ) a WHERE a.redId = ?", redId).Rows()
-	if err != nil {
+	//_ = DB.Raw("select count(*) from users u where u.total < ?", recordTotal.Totals).Row().Scan(&count)
+	rows, rankErr := DB.Raw("SELECT * FROM ( SELECT redId, total, @curRank := @curRank + 1 AS rank FROM users u, (SELECT @curRank := 0) r where total > 0 ORDER BY total ) a WHERE a.redId = ?", redId).Rows()
+	if rankErr != nil {
 		log.Println("fail to get user rank: ", err)
 	}
 	defer rows.Close()
-
 	for rows.Next() {
-		DB.ScanRows(rows, &userRank)
-		userRanks = append(userRanks, userRank)
+		DB.ScanRows(rows,&userInfo)
 	}
-	return userRanks[0].Total, userRank.Rank
-}
+	return recordTotal, userInfo.Rank
 
-//func GetUserRank(redId string) (float32, int) {
-//	var total Total
-//	var count int = -1
-//	err := DB.Table("users").Select("total").Where("redId = ?", redId).First(&total).Error
-//	if err != nil {
-//		log.Println("fail to get user rank:",err)
-//		return -1, -1
-//	}
-//	if total.Total > -1 {
-//		DB.Raw("select count(*) from users u where u.total < ?", total.Total).Row().Scan(&count)
-//	}
-//	return total.Total, count + 1
-//}
+}
 
 //func CopyInfoFromDB() {
 //

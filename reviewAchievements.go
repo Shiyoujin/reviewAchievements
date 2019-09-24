@@ -20,7 +20,8 @@ func main() {
 	r := gin.New()
 	f, _ := os.Create("gin.log")
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+	r.Use(gin.Logger())
 	route.LOAD(r)
-	r.Run()
+	r.Run(":9527")
 
 }
