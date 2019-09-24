@@ -6,24 +6,27 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 	"log"
-	"net/http"
 	"reviewAchievements/model"
 	"reviewAchievements/utils"
 	"strings"
 )
 
 func GetToken(c *gin.Context) {
+
 	token := c.Query("token")
 
+	fmt.Println(token)
 	//用 . 分成 Payload和Signature 两部分
 	tokenSlice := strings.Split(token, ".")
 	//取 Payload并替换
-	tokenPayload := strings.Replace(tokenSlice[0], "%20", "+", -1)
+	tokenPayload := strings.Replace(tokenSlice[0], " ", "+", -1)
+	fmt.Println(tokenPayload)
 	//base64解码
 	resultJson, err := base64.StdEncoding.DecodeString(tokenPayload)
 
 	if err != nil {
 		log.Fatalln(err)
+		fmt.Println("base64解码出错")
 	}
 
 	//json解析
@@ -36,6 +39,7 @@ func GetToken(c *gin.Context) {
 	head := headImgUrlSlice[0] + "s:"
 	head = head + headImgUrlSlice[1]
 
+	fmt.Println(redId, nickName, head)
 	//初始化建表
 	//db,err :=model.InitDB()
 	//defer db.Close()
@@ -44,8 +48,9 @@ func GetToken(c *gin.Context) {
 	//}
 
 	user := new(model.User)
-	model.DB.First(user, 1)
+	model.DB.Where("redId = ?", redId).First(user)
 
+	fmt.Println("RedId + " + user.RedId)
 	//如果没有查询到之前登录的数据
 	if user.RedId == "" {
 
@@ -55,9 +60,12 @@ func GetToken(c *gin.Context) {
 	}
 
 	//301重定向
-	c.Redirect(http.StatusMovedPermanently, "http://localhost:3000/#/?token="+tokenSlice[0])
+	//c.Redirect(http.StatusMovedPermanently, "http://localhost:3000/#/?token="+tokenSlice[0])
 	fmt.Println("getToken运行结束")
 
+	c.JSON(200, gin.H{
+		"status": "OK",
+	})
 }
 
 func PersonAchievements(context *gin.Context) {
