@@ -10,5 +10,5 @@ type User struct {
 	Three int  `gorm:"default:'-1'"`
 	Four int  `gorm:"default:'-1'"`
 	Five int  `gorm:"default:'-1'"`
-	Total int  `gorm:"default:'-1'"`
+	Total float64  `gorm:"default:'-1'"`
 }

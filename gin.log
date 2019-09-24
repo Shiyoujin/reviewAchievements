@@ -1,0 +1,5 @@
+[GIN-debug] POST   /allRank                  --> reviewAchievements/controller.GetAllRank (2 handlers)
+[GIN-debug] POST   /addTotal                 --> reviewAchievements/controller.AddGrades (2 handlers)
+[GIN-debug] POST   /pass                     --> reviewAchievements/controller.UpdateLevelTime (2 handlers)
+[GIN-debug] Listening and serving HTTP on :9527
+[GIN] 2019/09/24 - 16:11:12 | 200 |       1.996ms |             ::1 | POST     /allRank
