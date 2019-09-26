@@ -9,7 +9,7 @@ import (
 
 func GetAllRank(c *gin.Context) {
 	rankInfos := model.GetAllRank()
-	c.JSON(http.StatusOK,rankInfos)
+	c.JSON(http.StatusOK, rankInfos)
 }
 
 func AddGrades(c *gin.Context) {
@@ -20,8 +20,15 @@ func AddGrades(c *gin.Context) {
 	total, rank := model.InsertTotal(redId)
 	c.JSON(http.StatusOK, gin.H{
 		"totalTime": total,
-		"rank": rank,
+		"rank":      rank,
 	})
+}
+
+func PassTime(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	redId, _, _ := utils.GetTokenValue(token)
+	userInfo := model.PassTime(redId)
+	c.JSON(http.StatusOK, userInfo)
 }
 
 //func GetUserRank(c *gin.Context) {

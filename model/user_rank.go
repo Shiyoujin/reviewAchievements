@@ -18,20 +18,21 @@ type UserRank struct {
 func InsertTotal(redId string) (float64, int) {
 	var recordTotal float64
 	var userInfo UserRank
-	err := DB.Raw("SELECT (one*1.333+two*1.265+three*1.125+four*0.999+five*0.75) as totals FROM users u where u.redId = ?",redId).Row().Scan(&recordTotal)
+	err := DB.Raw("SELECT (one*1.333+two*1.265+three*1.125+four*0.999+five*0.75) as totals FROM users u where u.redId = ?", redId).Row().Scan(&recordTotal)
 	if err != nil {
-		log.Println("fail to insert total",err)
+		log.Println("fail to insert total", err)
 	}
-	DB.Table("users").Where("redId = ?",redId).Update("total",recordTotal)
+	DB.Table("users").Where("redId = ?", redId).Update("total", recordTotal)
 
 	//_ = DB.Raw("select count(*) from users u where u.total < ?", recordTotal.Totals).Row().Scan(&count)
 	rows, rankErr := DB.Raw("SELECT * FROM ( SELECT redId, total, @curRank := @curRank + 1 AS rank FROM users u, (SELECT @curRank := 0) r where total > 0 ORDER BY total ) a WHERE a.redId = ?", redId).Rows()
+
 	if rankErr != nil {
 		log.Println("fail to get user rank: ", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
-		DB.ScanRows(rows,&userInfo)
+		DB.ScanRows(rows, &userInfo)
 	}
 	return recordTotal, userInfo.Rank
 

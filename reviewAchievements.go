@@ -21,6 +21,10 @@ func main() {
 	f, _ := os.Create("gin.log")
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
 	r.Use(gin.Logger())
+
+	r.Use(gin.Recovery())
+
+	// 使用跨域中间件
 	route.LOAD(r)
 	r.Run(":8085")
 

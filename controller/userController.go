@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 	"log"
+	"net/http"
 	"reviewAchievements/model"
 	"reviewAchievements/utils"
 	"strings"
@@ -31,12 +32,14 @@ func GetToken(c *gin.Context) {
 
 	//json解析
 	jsonObject := gjson.Parse((string(resultJson)))
+	fmt.Println(jsonObject)
 	redId := jsonObject.Get("redId").String()
 	nickName := jsonObject.Get("nickname").String()
 	headImgUrl := jsonObject.Get("headImgUrl").String()
 
 	headImgUrlSlice := strings.Split(headImgUrl, ":")
 	head := headImgUrlSlice[0] + "s:"
+	fmt.Println("------", headImgUrlSlice)
 	head = head + headImgUrlSlice[1]
 
 	fmt.Println(redId, nickName, head)
@@ -54,18 +57,22 @@ func GetToken(c *gin.Context) {
 	//如果没有查询到之前登录的数据
 	if user.RedId == "" {
 
-		model.DB.Create(&model.User{RedId: redId, NickName: nickName, HeadImgUrl: headImgUrl})
-		log.Fatalln("新插入用户信息：" + nickName)
+		err := model.DB.Create(&model.User{RedId: redId, NickName: nickName, HeadImgUrl: headImgUrl}).Error
+		if err != nil {
+			log.Println(err)
+		}
 
 	}
 
 	//301重定向
-	//c.Redirect(http.StatusMovedPermanently, "http://localhost:3000/#/?token="+tokenSlice[0])
+	c.Redirect(http.StatusMovedPermanently, "https://upred.atowerlight.cn/tesgs/#/"+tokenSlice[0])
 	fmt.Println("getToken运行结束")
 
-	c.JSON(200, gin.H{
-		"status": "OK",
-	})
+	a := 1
+	fmt.Println("haha " + string(a))
+	//c.JSON(200, gin.H{
+	//	"status": "OK",
+	//})
 }
 
 func PersonAchievements(context *gin.Context) {
