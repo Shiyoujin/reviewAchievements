@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 	"log"
-	"net/http"
 	"reviewAchievements/model"
 	"reviewAchievements/utils"
 	"strings"
@@ -64,8 +63,9 @@ func GetToken(c *gin.Context) {
 
 	}
 
-	//301重定向
-	c.Redirect(http.StatusMovedPermanently, "https://upred.atowerlight.cn/tesgs/#/"+tokenSlice[0])
+	//301重定向，永久跳转 http.StatusMovedPermanently
+	//但这里是 302
+	c.Redirect(302, "https://upred.atowerlight.cn/tesgs/#/?token="+tokenSlice[0])
 	fmt.Println("getToken运行结束")
 
 	a := 1

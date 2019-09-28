@@ -7,15 +7,15 @@ import (
 	"strings"
 )
 
-func GetTokenValue(token string) (string,string,string){
+func GetTokenValue(token string) (string, string, string) {
 
 	//用 . 分成 Payload和Signature 两部分
-	tokenSlice :=  strings.Split(token,".")
+	tokenSlice := strings.Split(token, ".")
 
 	//base64解码
-	resultJson,err := base64.StdEncoding.DecodeString(tokenSlice[0])
-	if err!=nil {
-		log.Fatalln(err)
+	resultJson, err := base64.StdEncoding.DecodeString(tokenSlice[0])
+	if err != nil {
+		log.Println(err)
 	}
 	//json解析
 	jsonObject := gjson.Parse((string(resultJson)))
@@ -23,5 +23,5 @@ func GetTokenValue(token string) (string,string,string){
 	nickName := jsonObject.Get("nickname").String()
 	headImgUrl := jsonObject.Get("headImgUrl").String()
 
-	return redId,nickName,headImgUrl
+	return redId, nickName, headImgUrl
 }
