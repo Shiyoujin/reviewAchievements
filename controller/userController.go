@@ -45,11 +45,11 @@ func GetToken(c *gin.Context) {
 
 
 	user := new(model.User)
-	model.DB.Where("redId = ?", redId).First(user)
+	model.DB.Where("openId = ?", openId).First(user)
 
-	fmt.Println("RedId + " + user.RedId)
+	fmt.Println("openId + " + user.OpenId)
 	//如果没有查询到之前登录的数据
-	if user.RedId == "" {
+	if user.OpenId == "" {
 
 		err := model.DB.Create(&model.User{RedId: redId, OpenId: openId, NickName: nickName, HeadImgUrl: headImgUrl}).Error
 		if err != nil {
