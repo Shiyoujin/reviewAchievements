@@ -7,7 +7,6 @@ import (
 	"github.com/tidwall/gjson"
 	"log"
 	"reviewAchievements/model"
-	"reviewAchievements/utils"
 	"strings"
 )
 
@@ -25,7 +24,7 @@ func GetToken(c *gin.Context) {
 	resultJson, err := base64.StdEncoding.DecodeString(tokenPayload)
 
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 		fmt.Println("base64解码出错")
 	}
 
@@ -33,6 +32,7 @@ func GetToken(c *gin.Context) {
 	jsonObject := gjson.Parse((string(resultJson)))
 	fmt.Println(jsonObject)
 	redId := jsonObject.Get("redId").String()
+	openId := jsonObject.Get("openid").String()
 	nickName := jsonObject.Get("nickname").String()
 	headImgUrl := jsonObject.Get("headImgUrl").String()
 
@@ -41,13 +41,8 @@ func GetToken(c *gin.Context) {
 	fmt.Println("------", headImgUrlSlice)
 	head = head + headImgUrlSlice[1]
 
-	fmt.Println(redId, nickName, head)
-	//初始化建表
-	//db,err :=model.InitDB()
-	//defer db.Close()
-	//if err !=nil {
-	//	log.Println(err)
-	//}
+	fmt.Println(redId, nickName, head, openId)
+
 
 	user := new(model.User)
 	model.DB.Where("redId = ?", redId).First(user)
@@ -56,7 +51,7 @@ func GetToken(c *gin.Context) {
 	//如果没有查询到之前登录的数据
 	if user.RedId == "" {
 
-		err := model.DB.Create(&model.User{RedId: redId, NickName: nickName, HeadImgUrl: headImgUrl}).Error
+		err := model.DB.Create(&model.User{RedId: redId, OpenId: openId, NickName: nickName, HeadImgUrl: headImgUrl}).Error
 		if err != nil {
 			log.Println(err)
 		}
@@ -68,33 +63,27 @@ func GetToken(c *gin.Context) {
 	c.Redirect(302, "https://upred.atowerlight.cn/tesgs/#/?token="+tokenSlice[0])
 	fmt.Println("getToken运行结束")
 
-	a := 1
-	fmt.Println("haha " + string(a))
-	//c.JSON(200, gin.H{
-	//	"status": "OK",
-	//})
 }
 
-func PersonAchievements(context *gin.Context) {
-
-	//从 header中取出token
-	token := context.Request.Header.Get("token")
-
-	redId, _, _ := utils.GetTokenValue(token)
-
-	fmt.Println(redId)
-	user := new(model.User)
-
-	model.DB.Where("redId = ?", redId).First(user)
-
-	context.JSON(200, gin.H{
-		"redId": user.RedId,
-		"one":   user.One,
-		"two":   user.Two,
-		"three": user.Three,
-		"four":  user.Four,
-		"five":  user.Five,
-		"total": user.Total,
-	})
-
-}
+//func PersonAchievements(context *gin.Context) {
+//
+//	//从 header中取出token
+//	token := context.Request.Header.Get("token")
+//
+//	redId, _, _ := utils.GetTokenValue(token)
+//
+//	fmt.Println(redId)
+//	user := new(model.User)
+//
+//	model.DB.Where("redId = ?", redId).First(user)
+//
+//	context.JSON(200, gin.H{
+//		"redId": user.RedId,
+//		"one":   user.One,
+//		"two":   user.Two,
+//		"three": user.Three,
+//		"four":  user.Four,
+//		"five":  user.Five,
+//		"total": user.Total,
+//	})
+//}

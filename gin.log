@@ -1,6 +1,6 @@
+[GIN-debug] GET    /token                    --> reviewAchievements/controller.GetToken (3 handlers)
 [GIN-debug] GET    /allRank                  --> reviewAchievements/controller.GetAllRank (4 handlers)
 [GIN-debug] GET    /addTotal                 --> reviewAchievements/controller.AddGrades (4 handlers)
 [GIN-debug] POST   /pass                     --> reviewAchievements/controller.UpdateLevelTime (4 handlers)
-[GIN-debug] GET    /getToken                 --> reviewAchievements/controller.PersonAchievements (4 handlers)
 [GIN-debug] GET    /allTime                  --> reviewAchievements/controller.PassTime (4 handlers)
 [GIN-debug] Listening and serving HTTP on :8085

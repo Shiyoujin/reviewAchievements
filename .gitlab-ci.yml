@@ -1,0 +1,44 @@
+image: redrock-go
+variables:
+  REPO_NAME: reviewAchievements #你的项目名
+
+before_script:
+  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
+  - ln -svf $CI_PROJECT_DIR/ $GOPATH/src/$REPO_NAME
+
+stages:
+  - test
+  - build
+  - deploy
+
+format:
+  stage: test
+  tags:
+    - redrock-go
+  script:
+    - cd $GOPATH/src/$REPO_NAME
+    - go fmt $(go list ./... | grep -v /vendor/)
+    - go vet $(go list ./... | grep -v /vendor/)
+
+compile:
+  stage: build
+  tags:
+    - redrock-go
+  script:
+    - cd $GOPATH/src/$REPO_NAME
+    - go build -ldflags "-extldflags '-static'" -o app
+  artifacts:
+    paths:
+      - app
+
+docker:
+  stage: deploy
+  when: manual
+  tags:
+    - redrock-go
+  script:
+    - mkdir -p data
+    - mv app data/app
+    - mkdir -p data/log
+    - tar -C data -cf data.tar .
+    - curl -F data=@data.tar -X POST http://202.202.43.234/gsapi/deploy/reviewAchievements  # 改成你的项目名

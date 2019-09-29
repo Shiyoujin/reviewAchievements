@@ -14,10 +14,10 @@ func GetAllRank(c *gin.Context) {
 
 func AddGrades(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	redId, _, _ := utils.GetTokenValue(token)
+	openId, _, _ := utils.GetTokenValue(token)
 	//totalTimeStr := c.Request.FormValue("total")
 	//totalTime, _ := strconv.Atoi(totalTimeStr)
-	total, rank := model.InsertTotal(redId)
+	total, rank := model.InsertTotal(openId)
 	c.JSON(http.StatusOK, gin.H{
 		"totalTime": total,
 		"rank":      rank,
@@ -26,8 +26,8 @@ func AddGrades(c *gin.Context) {
 
 func PassTime(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	redId, _, _ := utils.GetTokenValue(token)
-	userInfo := model.PassTime(redId)
+	openId, _, _ := utils.GetTokenValue(token)
+	userInfo := model.PassTime(openId)
 	c.JSON(http.StatusOK, userInfo)
 }
 

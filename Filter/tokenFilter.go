@@ -11,6 +11,7 @@ func Authorize() gin.HandlerFunc {
 
 		//从 header中取出token
 		token := c.Request.Header.Get("token") // 访问令牌
+
 		method := c.Request.Method
 		// 放行所有OPTIONS方法，因为有的模板是要请求两次的
 		//OPTIONS 方法不验证token

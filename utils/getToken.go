@@ -19,9 +19,9 @@ func GetTokenValue(token string) (string, string, string) {
 	}
 	//json解析
 	jsonObject := gjson.Parse((string(resultJson)))
-	redId := jsonObject.Get("redId").String()
+	openId := jsonObject.Get("openid").String()
 	nickName := jsonObject.Get("nickname").String()
 	headImgUrl := jsonObject.Get("headImgUrl").String()
 
-	return redId, nickName, headImgUrl
+	return openId, nickName, headImgUrl
 }

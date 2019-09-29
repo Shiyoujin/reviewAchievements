@@ -17,7 +17,7 @@ func LOAD(router *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	//router.POST("/copyInfo",controller.CopyInfo)
 	router.GET("/addTotal", controller.AddGrades)
 	router.POST("/pass", controller.UpdateLevelTime)
-	router.GET("/getToken", controller.PersonAchievements)
+
 	router.GET("/allTime", controller.PassTime)
 	return router
 }
